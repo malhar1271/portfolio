@@ -16,68 +16,67 @@ const PROJECTS: ProjectItem[] = [
   {
     id: "versalite",
     title: "Versa-Lite",
-    alt: "Aster Bloom",
+    alt: "Versa-Lite",
     href: "/work/versalite",
     image:
       "https://framerusercontent.com/images/Y8r9ofFJErzRWULRg0F7NvsnCgU.jpeg?width=392&height=560",
   },
   {
-    id: "morrow",
-    title: "Morrow Atelier",
-    alt: "Morrow Atelier",
-    href: "/work/morrow-atelier",
+    id: "cder",
+    title: "CD'er",
+    alt: "CD'er",
+    href: "/work/cd'er",
     image:
       "https://framerusercontent.com/images/FoYT023555xMkxCER3riLwhffY.jpeg?scale-down-to=1024&width=5472&height=3648",
   },
   {
-    id: "kairo",
-    title: "Kairo Editions",
-    alt: "Kairo Editions",
-    href: "/work/kairo-editions",
+    id: "oakune",
+    title: "Ohakune",
+    alt: "Ohakune",
+    href: "/work/ohakune",
     image:
       "https://framerusercontent.com/images/g190fqjdjMhotQjJKP6T9pqAqHI.png?scale-down-to=1024&width=2289&height=1440",
   },
   {
-    id: "solene",
-    title: "Solène Goods",
-    alt: "Solène Goods",
-    href: "/work/solene-goods",
+    id: "coat hanger",
+    title: "Coat Hanger",
+    alt: "Coat Hanger",
+    href: "/work/coat-hanger",
     image:
       "https://framerusercontent.com/images/8VAQ2od81eoSziJpxhUATCjGI.jpeg?scale-down-to=1024&width=2304&height=3072",
   },
   {
-    id: "lumen",
-    title: "Lumen Press",
-    alt: "Lumen Press",
-    href: "/work/lumen-press",
+    id: "peace encaged",
+    title: "Peace Encaged",
+    alt: "Peace Encaged",
+    href: "/work/peace-encaged",
     image:
       "https://framerusercontent.com/images/bD5Gf7o1I9r95pxrFsFzXvx63vE.jpeg?scale-down-to=1024&width=5159&height=3591",
   },
   {
-    id: "verre",
-    title: "Verre Atelier",
-    alt: "Verre Atelier",
-    href: "/work/verre-atelier",
+    id: "spotlight",
+    title: "Spotlight",
+    alt: "Spotlight",
+    href: "/work/spotlight",
     image:
       "https://framerusercontent.com/images/ZTXfPBTxUeiEScB09nfOcIoIu4.png?scale-down-to=1024&width=1232&height=1080",
   },
   {
-    id: "halcyon",
-    title: "Halcyon Type",
-    alt: "Halcyon Type",
-    href: "/work/halcyon-type",
+    id: "the reframe project",
+    title: "The Reframe Project",
+    alt: "The Reframe Project",
+    href: "/work/the-reframe-project",
     image:
       "https://framerusercontent.com/images/DalA4rIooA69bbj58wUt55plFKk.jpeg?scale-down-to=1024&width=1073&height=740",
   },
 ];
 
 interface CarouselMetrics {
-  heroWidth: number;
-  heroHeight: number;
+  previewWidth: number;
+  previewHeight: number;
   thumbWidth: number;
   thumbHeight: number;
   radiusX: number;
-  radiusY: number;
   maxCursorShiftX: number;
   maxCursorShiftY: number;
   isCompact: boolean;
@@ -91,12 +90,11 @@ export default function PortfolioRoulettePage() {
   const [cursorNorm, setCursorNorm] = useState({ x: 0, y: 0 });
 
   const [metrics, setMetrics] = useState<CarouselMetrics>({
-    heroWidth: 510,
-    heroHeight: 593,
-    thumbWidth: 105,
-    thumbHeight: 145,
+    previewWidth: 408,
+    previewHeight: 474,
+    thumbWidth: 73.5,
+    thumbHeight: 101.43,
     radiusX: 520,
-    radiusY: 65,
     maxCursorShiftX: 140,
     maxCursorShiftY: 90,
     isCompact: false,
@@ -111,7 +109,6 @@ export default function PortfolioRoulettePage() {
   const snapTargetRef = useRef<number | null>(null);
   const lastX = useRef(0);
   const lastPointerTime = useRef(0);
-  const lastWheelTime = useRef(0);
   const lastFrameTime = useRef(0);
   const rafRef = useRef<number | null>(null);
   const hasMovedRef = useRef(false);
@@ -160,24 +157,22 @@ export default function PortfolioRoulettePage() {
       const heroWidth = Math.min(maxHeroW, maxHeroH * 0.86);
       const heroHeight = heroWidth / 0.86;
 
-      const thumbWidth = Math.max(52, Math.min(116, heroWidth * 0.21));
+      const orbitThumbWidth = Math.max(52, Math.min(116, heroWidth * 0.21));
+      const thumbWidth = orbitThumbWidth * 0.7;
       const thumbHeight = thumbWidth * 1.38;
 
       const radiusX = Math.max(
         heroWidth * 0.46,
-        (targetSpanW - thumbWidth) / 2
+        (targetSpanW - orbitThumbWidth) / 2
       );
-      const radiusY = heroHeight * 0.11;
-
       setMetrics({
-        heroWidth,
-        heroHeight,
+        previewWidth: heroWidth * 0.72,
+        previewHeight: heroHeight * 0.72,
         thumbWidth,
         thumbHeight,
         radiusX,
-        radiusY,
-        maxCursorShiftX: vw * 0.1,
-        maxCursorShiftY: vh * 0.1,
+        maxCursorShiftX: vw * 0.17,
+        maxCursorShiftY: vh * 0.17,
         isCompact,
       });
     };
@@ -241,7 +236,7 @@ export default function PortfolioRoulettePage() {
     };
   }, []);
 
-  // Unified Framer-style momentum & spring-snap physics loop (refresh-rate normalized)
+  // Refresh-rate-normalized inertia with no automatic slot snapping.
   const ensurePhysicsLoop = useCallback(() => {
     if (rafRef.current !== null) return;
     lastFrameTime.current = performance.now();
@@ -280,39 +275,24 @@ export default function PortfolioRoulettePage() {
         return;
       }
 
-      // Free momentum + magnetic slot snapping once wheel/drag settles
+      // Free momentum decays naturally and keeps its final angular position.
       next += velocityRef.current * dtRatio;
       velocityRef.current *= Math.pow(0.915, dtRatio);
 
-      const isWheelIdle = now - lastWheelTime.current > 85;
-      const isSlowEnoughToSnap = Math.abs(velocityRef.current) < 0.018;
-
-      if (isWheelIdle && isSlowEnoughToSnap) {
-        const nearestSlot = Math.round(next / stepAngle) * stepAngle;
-        const diff = nearestSlot - next;
-        const magnetStrength = 1 - Math.pow(1 - 0.14, dtRatio);
-        next += diff * magnetStrength;
-
-        if (
-          Math.abs(diff) < 0.0004 &&
-          Math.abs(velocityRef.current) < 0.0004
-        ) {
-          next = nearestSlot;
-          velocityRef.current = 0;
-          rotationRef.current = next;
-          setRotation(next);
-          rafRef.current = null;
-          return;
-        }
-      }
-
       rotationRef.current = next;
       setRotation(next);
+
+      if (Math.abs(velocityRef.current) < 0.0004) {
+        velocityRef.current = 0;
+        rafRef.current = null;
+        return;
+      }
+
       rafRef.current = requestAnimationFrame(tick);
     };
 
     rafRef.current = requestAnimationFrame(tick);
-  }, [stepAngle]);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -330,7 +310,6 @@ export default function PortfolioRoulettePage() {
       e.stopPropagation();
 
       snapTargetRef.current = null;
-      lastWheelTime.current = performance.now();
 
       // Normalize deltaMode (0 = pixels, 1 = lines, 2 = pages)
       const modeScale =
@@ -445,48 +424,44 @@ export default function PortfolioRoulettePage() {
     transition: "background-color 0.2s ease",
   });
 
-  // Render each hemisphere using one shared cylindrical perspective.
+  // Render both halves of one level cylinder with shared perspective.
   const renderRingLayer = (layer: "back" | "front") => {
-    const perspectiveDist = Math.max(900, metrics.radiusX * 3);
-    const effectiveRadiusY = metrics.radiusY * (1 - cursorNorm.y * 0.22);
+    // Evenly spaced cards have mean proximity 0.5 around the level orbit.
+    const meanPullX = cursorNorm.x * metrics.maxCursorShiftX * 0.625;
+    const meanPullY = cursorNorm.y * metrics.maxCursorShiftY * 0.625;
 
     return PROJECTS.map((project, idx) => {
       const theta = idx * stepAngle + rotation;
       const sin = Math.sin(theta);
       const cos = Math.cos(theta); // +1 at front center -> -1 at back center
 
-      // Normalized proximity to front-center [0 (back) .. 0.5 (sides) .. 1 (front)]
       const centerProximity = (cos + 1) / 2;
+const scale = 1 + centerProximity * 0.4;
 
       // Cohesive cursor follow: 100% pull at front, ~63% at sides, 25% subtle drift at back
       const parallaxWeight = 0.25 + 0.75 * centerProximity;
 
-      const pullX = cursorNorm.x * metrics.maxCursorShiftX * parallaxWeight;
-      const pullY = cursorNorm.y * metrics.maxCursorShiftY * parallaxWeight;
+      // Remove the shared component of the pull so the carousel's center stays fixed.
+      const pullX =
+        cursorNorm.x * metrics.maxCursorShiftX * parallaxWeight - meanPullX;
+      const pullY =
+        cursorNorm.y * metrics.maxCursorShiftY * parallaxWeight - meanPullY;
 
+      // Keep the orbit level; cursor pull is balanced to preserve its center.
       const x = sin * metrics.radiusX + pullX;
-      const y = (cos - 1) * effectiveRadiusY + pullY;
+      const y = pullY;
       const z = cos * metrics.radiusX;
-
-      // Use actual Z depth to calculate the camera ray and apply one continuous
-      // orbital angle to both hemispheres.
-      const camAngleDeg =
-        (Math.atan2(x, perspectiveDist - z) * 180) / Math.PI;
 
       // Front vs back split occurs cleanly at the cylinder's tangent horizon
       const isFrontHalf = cos >= 0;
       if (layer === "back" && isFrontHalf) return null;
       if (layer === "front" && !isFrontHalf) return null;
 
-      const orbitalAngleDeg = (Math.atan2(sin, cos) * 180) / Math.PI;
-      const cylinderYawDeg = orbitalAngleDeg - camAngleDeg;
+      // Let each card turn at the same rate as its point moves around the Y axis.
+      const cylinderYawDeg = (theta * 180) / Math.PI;
 
-      // Smoothly fade near the exact ±90° perpendicular edge to eliminate any 1px subpixel shimmer
-      const edgeVisibility = Math.min(1, Math.abs(cos) * 12);
-      const baseOpacity = isFrontHalf
-        ? 0.88 + cos * 0.12
-        : 0.75 + centerProximity * 0.2;
-      const opacity = baseOpacity * edgeVisibility;
+      // Keep opacity continuous as a card crosses from front to rear.
+      const opacity = 0.75 + centerProximity * 0.25;
 
       const zIndex = Math.round(centerProximity * 2000);
 
@@ -506,7 +481,7 @@ export default function PortfolioRoulettePage() {
             alignItems: "center",
             justifyContent: "center",
             zIndex,
-            pointerEvents: edgeVisibility > 0.15 ? "auto" : "none",
+            pointerEvents: "auto",
             cursor: "pointer",
           }}
         >
@@ -517,10 +492,10 @@ export default function PortfolioRoulettePage() {
               position: "relative",
               transformStyle: "preserve-3d",
               transform: `translate3d(${x.toFixed(2)}px, ${y.toFixed(
-                2
-              )}px, ${z.toFixed(2)}px) rotateY(${cylinderYawDeg.toFixed(
-                2
-              )}deg)`,
+  2
+)}px, ${z.toFixed(2)}px) rotateY(${cylinderYawDeg.toFixed(
+  2
+)}deg) scale(${scale})`,
               willChange: "transform",
             }}
           >
@@ -615,13 +590,13 @@ export default function PortfolioRoulettePage() {
             pointerEvents: "auto",
           }}
         >
-          <Link href="/about" style={getTabStyle("/about")}>
+          <Link className="nav-tab" href="/about" style={getTabStyle("/about")}>
             About
           </Link>
-          <Link href="/work" style={getTabStyle("/work")}>
+          <Link className="nav-tab" href="/work" style={getTabStyle("/work")}>
             Work
           </Link>
-          <Link href="/contact" style={getTabStyle("/contact")}>
+          <Link className="nav-tab" href="/contact" style={getTabStyle("/contact")}>
             Contact
           </Link>
         </nav>
@@ -636,6 +611,7 @@ export default function PortfolioRoulettePage() {
           }}
         >
           <a
+            className="nav-tab"
             href="https://www.linkedin.com/in/malhar-shirur-b53707285"
             target="_blank"
             rel="noreferrer"
@@ -644,6 +620,7 @@ export default function PortfolioRoulettePage() {
             Linkedin
           </a>
           <a
+            className="nav-tab"
             href="mailto:shirurmalhar@gmail.com"
             style={getTabStyle("external-email")}
           >
@@ -682,7 +659,7 @@ export default function PortfolioRoulettePage() {
             alignItems: "center",
             justifyContent: "center",
             userSelect: "none",
-            cursor: isDragging ? "grabbing" : "grab",
+            cursor: "default",
             touchAction: "none",
           }}
         >
@@ -709,7 +686,7 @@ export default function PortfolioRoulettePage() {
               position: "absolute",
               left: "50%",
               top: "50%",
-              width: `${metrics.heroWidth}px`,
+              width: `${metrics.previewWidth}px`,
               transform: "translate(-50%, -50%)",
               zIndex: 1,
               pointerEvents: "auto",
@@ -734,6 +711,7 @@ export default function PortfolioRoulettePage() {
                   display: "block",
                   width: "100%",
                   height: "100%",
+                  cursor: "pointer",
                 }}
               >
                 <img
@@ -772,8 +750,8 @@ export default function PortfolioRoulettePage() {
             style={{
               position: "absolute",
               left: "50%",
-              top: `calc(50% - ${metrics.heroHeight / 2}px)`,
-              width: `${metrics.heroWidth}px`,
+              top: `calc(50% - ${metrics.previewHeight / 2}px)`,
+              width: `${metrics.previewWidth}px`,
               transform: "translate(-50%, -100%)",
               zIndex: 3,
               pointerEvents: "auto",
@@ -806,6 +784,7 @@ export default function PortfolioRoulettePage() {
                 {activeProject.title}
               </span>
               <Link
+                className="nav-tab"
                 href={activeProject.href}
                 aria-label={`View Project - ${activeProject.title}`}
                 style={{

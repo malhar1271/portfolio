@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-neon: #D5FF00;
+  --color-cream: #F5EDE1;
+  --color-cream-light: #FEF9EF;
+  --color-dark: #0C0C0C;
+  --color-dark-alt: #0A0A0A;
+  --color-dark-card: #121212;
+  --color-muted: #757575;
+  --color-light: #EDEDED;
+  --color-subtle: #F6F6F6;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
